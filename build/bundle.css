@@ -1,0 +1,141 @@
+html,
+body {
+  position: relative;
+}
+
+body {
+  color: #333;
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+    'Helvetica Neue', sans-serif;
+
+  background-color: #333;
+}
+
+a {
+  color: rgb(0, 100, 200);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: rgb(0, 80, 160);
+}
+
+label {
+  display: block;
+}
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  -webkit-padding: 0.4em 0;
+  padding: 0.4em;
+  margin: 0 0 0.5em 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+input:disabled {
+  color: #ccc;
+}
+
+button {
+  color: #333;
+  background-color: #f4f4f4;
+  outline: none;
+}
+
+button:disabled {
+  color: #999;
+}
+
+button:not(:disabled):active {
+  background-color: #ddd;
+}
+
+button:focus {
+  border-color: #666;
+}
+
+.gesture-recognizer.svelte-p8tcev {
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  position: absolute;
+  cursor: pointer;
+}
+.gestureActivated.svelte-p8tcev {
+  z-index: 1000;
+}
+.card-wrapper.svelte-1oijsep {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.card.svelte-1oijsep {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+.card-inner.svelte-1oijsep {
+  width: 100%;
+  text-align: center;
+}
+.task.svelte-cqlj0q {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+h1.svelte-cqlj0q {
+  margin: 0;
+  padding: 30px;
+}
+hr.svelte-cqlj0q {
+  margin: 30px auto;
+}
+ul.svelte-cqlj0q {
+  padding-right: 20px;
+  padding-bottom: 50px;
+}
+code.svelte-1anl9sr {
+  color: gray;
+}
+main.svelte-1anl9sr {
+  text-align: center;
+  padding: 0;
+  margin: 0 auto;
+}
+.wrap-card.svelte-1anl9sr {
+  width: 80%;
+  margin: auto;
+  margin-top: 40px;
+}
+.title.svelte-1anl9sr {
+  font-size: 40px;
+  margin-bottom: 40px;
+}
+.wrapper.svelte-1anl9sr {
+  width: 100%;
+  height: 100vh;
+  max-width: 480px;
+  background-color: white;
+  margin: auto;
+}
