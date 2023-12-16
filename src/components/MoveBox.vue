@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 
 const underText = ref('purple');
 const mouseFlag = ref(false);
-
 const initX = ref(0);
+
 
 const aboveTranslate = ref(0);
 const aboveOpacity = ref(100);
 const aboveTransition = ref('');
+const filpFlag = ref(false);
+const mouseMoveFlag = ref(false);
+const transitionColor = ref('');
 
 // 첫번쨰 상자
 const aboveTranslateBind = computed(() => `translate3d(${aboveTranslate.value}px, 0px, 0px)`);
@@ -18,18 +21,31 @@ const aboveColorList = ref(['red', 'orange', 'green', 'blue'])
 const aboveIdx = ref(0);
 const aboveStatus = ref('AUTO TRANSITION');
 
-
+// 마우스 움직일 때
 document.addEventListener('mousemove', function (event: MouseEvent) {       
-  if (mouseFlag.value) {        
-    aboveTranslate.value = event.x - initX.value;   
-    aboveOpacity.value = calOpacity();    
-    aboveStatus.value = aboveTranslate.value < 0 ? 'SWIPE LEFT' : 'SWIPE RIGHT'
+  if (mouseFlag.value) {       
+    const distance = event.x - initX.value;    
+    transitionColor.value = afterColor();
+    if (aboveStatus.value.startsWith('SWIPE')) {
+      if(aboveStatus.value == 'SWIPE LEFT') {        
+        aboveTranslate.value = distance > 0 ? 0 : event.x - initX.value;   
+      } else {
+        aboveTranslate.value = distance < 0 ? 0 : event.x - initX.value;   
+      }
+    } else {
+      aboveTranslate.value = event.x - initX.value;   
+      aboveStatus.value = aboveTranslate.value < 0 ? 'SWIPE LEFT' : 'SWIPE RIGHT'
+    }
+    
+    mouseMoveFlag.value = true;    
+    aboveOpacity.value = calOpacity();               
   }
+  
 }); 
 
-
+// 마우스 땟을 때
 document.addEventListener('mouseup', function() {     
-  const width = document.getElementById('real').offsetWidth;  
+  const width = document.getElementById('real').offsetWidth;      
   if (mouseFlag.value) {
     aboveTransition.value = '0.3s ease 0s';
     if (toPositiveNumber(aboveTranslate.value) >= width / 2) {        
@@ -43,18 +59,27 @@ document.addEventListener('mouseup', function() {
       aboveOpacity.value = 100;   
     }     
   }
-  
-  mouseFlag.value = false;    
+        
+  mouseFlag.value = false;      
 }); 
 
+// 트랜지션 종료 시점
 document.addEventListener('transitionend', function() {
   aboveTransition.value = '0s';
   aboveTranslate.value = 0;
-  aboveOpacity.value = 100;
+  aboveOpacity.value = 100;  
+});
+
+// 트랜지션 시작 시점
+document.addEventListener('transitionstart', function() {
+  if (aboveStatus.value.startsWith('TO')) {
+    transitionColor.value = aboveColorList.value[aboveIdx.value];
+  }
 });
 
 
-function aboveMouseDown(event: MouseEvent) {  
+// 마우스 클릭시 
+function aboveMouseDown(event: MouseEvent) {      
   aboveTranslate.value = 0;
   initX.value = event.x;  
   aboveTransition.value = '0s';
@@ -76,60 +101,42 @@ function toPositiveNumber(item: number) {
   return Math.abs(item);
 }
 
+// 다음 색깔 지정 (idx가 최대 일 경우 0으로, 아닐시 +1)
 function afterColor() {
-  if (aboveIdx.value == aboveColorList.value.length - 1) {
-    return aboveColorList.value[0];
-  } else {
-    return aboveColorList.value[aboveIdx.value + 1];
-  }
-}
-
-function beforeColor() {
-  if (aboveIdx.value == 0) {
-    return 3
-  } else {
-    return aboveIdx.value - 1;
-  }
-}
-
-function behindColor() {  
-  if (aboveStatus.value == 'CANCEL') {
-    return aboveColorList.value[aboveIdx.value];
-  } else {
-    return aboveColorList.value[beforeColor()]
-  }
+  return aboveIdx.value == aboveColorList.value.length - 1 ? aboveColorList.value[0] : aboveColorList.value[aboveIdx.value + 1];  
 }
 
 </script>
 
 <template>
-  <div class="wrapper svelte-1anl9sr">            
-    translateX: {{translateX}}
+  <div class="wrapper svelte-1anl9sr" style="-webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+          user-select:none;" draggable="false">      
+    filpFlag : {{ filpFlag}}     
+    translateX: {{aboveTranslate}}
     init : {{initX}}
       <pre id="codeput">{{ codeOutput }}</pre>        
     <div class="title svelte-1anl9sr" style="text-align: center">Task</div>
     <div class="wrap-card svelte-1anl9sr">
       <div class="blackText">{{  aboveStatus  }}</div>
-      <div class="card-wrapper svelte-1oijsep" style="height: 60px" @mousedown="aboveMouseDown($event)">        
-        <div class="card svelte-1oijsep" :style="{  backgroundColor: afterColor() }">
-          <div class="card-inner svelte-1oijsep" draggable="false">{{ afterColor() }}</div>
+      <div class="card-wrapper svelte-1oijsep" style="height: 60px" @mousedown="aboveMouseDown($event)" @click="alertfunction">        
+        <div class="card svelte-1oijsep" :style="{  backgroundColor: transitionColor}">
+          <div class="card-inner svelte-1oijsep">{{ transitionColor }}</div>
         </div>        
         <div
           id="real"
           class="card svelte-1oijsep"        
-           @after-enter="transitionComplete()"  
+          @after-enter="transitionComplete()"  
           :style="{ transform: aboveTranslateBind, opacity: aboveOpacityBind, transition: aboveTransition, backgroundColor: aboveColorList[aboveIdx] }"        
-          draggable="false"                 
+          draggable="false"                      
         >
-          <div class="card-inner svelte-1oijsep" draggable="false" style="-webkit-user-select:none;
-        -moz-user-select:none;
-        -ms-user-select:none;
-          user-select:none;">{{ aboveColorList[aboveIdx] }}</div>
+          <div class="card-inner svelte-1oijsep">{{ aboveColorList[aboveIdx] }}</div>
         </div>
         <div class="gesture-recognizer svelte-p8tcev" style="left: 0px; top: 0px"></div>
       </div>
     </div>
-    <div class="grayText">["red", "orange", "green", "blue"]</div>
+    <div class="grayText" draggable="false">["red", "orange", "green", "blue"]</div>
     <div class="wrap-card svelte-1anl9sr" style="width: 50%">
       <div class="blackText">AUTO TRANSITION</div>
       <div class="card-wrapper svelte-1oijsep" style="height: 120px">
