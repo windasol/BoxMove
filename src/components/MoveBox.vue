@@ -9,9 +9,9 @@ const initX = ref(0);
 const aboveTranslate = ref(0);
 const aboveOpacity = ref(100);
 const aboveTransition = ref('');
-const filpFlag = ref(false);
 const mouseMoveFlag = ref(false);
 const transitionColor = ref('');
+const interval = ref();
 
 // 첫번쨰 상자
 const aboveTranslateBind = computed(() => `translate3d(${aboveTranslate.value}px, 0px, 0px)`);
@@ -59,7 +59,8 @@ document.addEventListener('mouseup', function() {
       aboveOpacity.value = 100;   
     }     
   }
-        
+                          
+  interval.value = setInterval(autoTransition, 3000);                          
   mouseFlag.value = false;      
 }); 
 
@@ -68,6 +69,7 @@ document.addEventListener('transitionend', function() {
   aboveTransition.value = '0s';
   aboveTranslate.value = 0;
   aboveOpacity.value = 100;  
+  mouseMoveFlag.value = false;  
 });
 
 // 트랜지션 시작 시점
@@ -84,6 +86,7 @@ function aboveMouseDown(event: MouseEvent) {
   initX.value = event.x;  
   aboveTransition.value = '0s';
   mouseFlag.value = true;  
+  clearInterval(interval.value)
 }
 
 // 움직일때 투명도 설정
@@ -106,6 +109,27 @@ function afterColor() {
   return aboveIdx.value == aboveColorList.value.length - 1 ? aboveColorList.value[0] : aboveColorList.value[aboveIdx.value + 1];  
 }
 
+// 마우스 클릭시 alert창
+function alertfunction() {
+  if (!mouseMoveFlag.value) {
+    alert('CLICK : ' + aboveColorList.value[aboveIdx.value]);
+  }
+}
+
+// auto transition 구현
+function autoTransition() {
+  transitionColor.value = afterColor();
+  aboveTransition.value = '0.3s ease 0s';
+  aboveTranslate.value = 400;
+  aboveIdx.value = aboveIdx.value === aboveColorList.value.length - 1 ? 0 : aboveIdx.value + 1;
+  aboveStatus.value = 'AUTO TRANSITION';
+  aboveOpacity.value = 0;
+};
+
+onMounted(() => {
+  interval.value = setInterval(autoTransition, 3000);
+})
+
 </script>
 
 <template>
@@ -113,7 +137,7 @@ function afterColor() {
         -moz-user-select:none;
         -ms-user-select:none;
           user-select:none;" draggable="false">      
-    filpFlag : {{ filpFlag}}     
+    mousemoveflag : {{ mousemoveflag }}     
     translateX: {{aboveTranslate}}
     init : {{initX}}
       <pre id="codeput">{{ codeOutput }}</pre>        
