@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 const props = defineProps<{
   list: Array<string>;
@@ -77,20 +77,10 @@ function autoTransition() {
   opacity.value = 0;
 }
 
-const mobile = document.querySelector('#app');
-
 // 마운트 시점
 onMounted(() => {
   interval.value = setInterval(autoTransition, 3000);
-  fullWidth.value = document.getElementById(props.id)!.offsetWidth ?? 0;
-
-  // 모바일 화면 스크롤 제거
-  // 화면이 작다면 App.vue 의 moveBox 컴포넌트 의 width, height 값 조정을 해주세요
-  if (window.innerWidth <= 600) {    
-    const mobile = document.querySelector('#app') as HTMLElement;
-    mobile!.style.overflow = "hidden";
-  }
-  
+  fullWidth.value = document.getElementById(props.id)!.offsetWidth ?? 0;  
 })
 
 // pc 마우스 start
@@ -212,6 +202,11 @@ function flip(x: number) {
   flipX.value = x;    
 }
 
+// 모바일 화면 스크롤 막기
+window.addEventListener('resize', function() {  
+  const app = document.querySelector('#app') as HTMLElement;
+  app!.style.overflow = window.innerWidth <= 600 ? 'hidden' : '';  
+})
 </script>
 
 <template>
