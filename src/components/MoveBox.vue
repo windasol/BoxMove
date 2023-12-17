@@ -77,9 +77,20 @@ function autoTransition() {
   opacity.value = 0;
 }
 
+const mobile = document.querySelector('#app');
+
+// 마운트 시점
 onMounted(() => {
   interval.value = setInterval(autoTransition, 3000);
   fullWidth.value = document.getElementById(props.id)!.offsetWidth ?? 0;
+
+  // 모바일 화면 스크롤 제거
+  // 화면이 작다면 App.vue 의 moveBox 컴포넌트 의 width, height 값 조정을 해주세요
+  if (window.innerWidth <= 600) {    
+    const mobile = document.querySelector('#app') as HTMLElement;
+    mobile!.style.overflow = "hidden";
+  }
+  
 })
 
 // pc 마우스 start
