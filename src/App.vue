@@ -13,7 +13,7 @@ import MoveBox from '@/components/MoveBox.vue'
     "
     draggable="false"
   >
-    <div class="title svelte-1anl9sr" style="text-align: center">Task</div>
+    <div class="title svelte-1anl9sr" style="text-align: center">Box</div>
     <MoveBox :list="['red', 'orange', 'green', 'blue']" :width="'width: 350px'" :height="'height: 60px'" :id="'above'" />
     <MoveBox :list="['indigo', 'purple']" :width="'width: 200px'" :height="'height: 120px'" :id="'under'"/>    
   </div>
