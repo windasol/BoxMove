@@ -210,6 +210,8 @@ window.addEventListener('resize', function() {
 </script>
 
 <template>
+    <div id="shoplive-shorts"></div>
+
     <div class="wrap-card svelte-1anl9sr" :style="props.width">          
       <div class="blackText">{{ status }}</div>
       <div
@@ -243,7 +245,7 @@ window.addEventListener('resize', function() {
         <div class="gesture-recognizer svelte-p8tcev" style="left: 0px; top: 0px"></div>
       </div>
     <div class="grayText" draggable="false">{{ colorList }}</div>
-    </div>
+  </div>
 </template>
 
 <style scoped>
